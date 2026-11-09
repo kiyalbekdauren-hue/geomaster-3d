@@ -938,6 +938,146 @@ with tab1:
     )
 
 
+    # INTERACTIVE STUDENT FEEDBACK
+
+    st.divider()
+    st.markdown("### ✍️ Try Your Own Answer")
+
+    st.write(
+        "Write your own solution and receive "
+        "personalized feedback."
+    )
+
+    st.info(
+        "Question: A cube has a side length of "
+        "5 cm. What is its volume?"
+    )
+
+    import re
+
+    student_answer = st.text_area(
+        "Your Answer",
+        placeholder="Write your calculation and explanation...",
+        height=130,
+        key="student_written_answer"
+    )
+
+    if st.button("🤖 Generate Feedback", key="generate_feedback"):
+
+        answer = student_answer.lower().strip()
+        compact = re.sub(r"\s+", "", answer)
+
+        has_125 = bool(
+            re.search(r"(?<!\d)125(?!\d)", answer)
+        )
+
+        has_25 = bool(
+            re.search(r"(?<!\d)25(?!\d)", answer)
+        )
+
+        cubic_units = any(
+            unit in compact
+            for unit in ["cm³", "cm^3", "cm3"]
+        )
+
+        square_units = any(
+            unit in compact
+            for unit in ["cm²", "cm^2", "cm2"]
+        )
+
+        has_formula = (
+            "5*5*5" in compact
+            or "5×5×5" in compact
+            or "5x5x5" in compact
+            or "5^3" in compact
+            or "5³" in compact
+            or "a^3" in compact
+            or "a³" in compact
+        )
+
+        if not answer:
+            st.warning(
+                "Please write an answer before submitting."
+            )
+
+        elif has_125 and cubic_units:
+            st.success("✅ Correct Answer!")
+
+            feedback = (
+                "Excellent work! The volume is 125 cm³. "
+                "You have given the correct value and units. "
+            )
+
+            if has_formula:
+                feedback += (
+                    "You also demonstrated the correct "
+                    "calculation method."
+                )
+            else:
+                feedback += (
+                    "For an even stronger answer, show "
+                    "the formula V = a³."
+                )
+
+            st.write(feedback)
+
+        elif has_125 and square_units:
+            st.warning("⚠️ Almost Correct!")
+
+            st.write(
+                "Your numerical answer is correct, "
+                "but your units are incorrect. "
+                "Volume is measured in cubic units (cm³), "
+                "not square units (cm²). "
+                "The correct answer is 125 cm³."
+            )
+
+        elif has_125:
+            st.info("👍 Good Progress!")
+
+            st.write(
+                "You found the correct value: 125. "
+                "Remember to include the unit cm³ "
+                "because we are calculating volume."
+            )
+
+        elif has_25:
+            st.warning("💡 Let's Improve Your Answer")
+
+            st.write(
+                "You calculated 5 × 5 = 25. "
+                "This gives the area of one square face, "
+                "not the volume of the cube. "
+                "To find the volume, multiply by "
+                "the third dimension: "
+                "5 × 5 × 5 = 125 cm³."
+            )
+
+        elif has_formula:
+            st.info("📘 You're on the Right Track!")
+
+            st.write(
+                "You identified a useful formula or "
+                "calculation. Now complete it and "
+                "write your final answer with units: "
+                "V = 5³ = 125 cm³."
+            )
+
+        else:
+            st.error("📚 Review the Volume Formula")
+
+            st.write(
+                "Your answer does not show the correct "
+                "volume yet. Remember that the volume "
+                "of a cube is V = a³. "
+                "For a side length of 5 cm: "
+                "V = 5 × 5 × 5 = 125 cm³. "
+                "Try solving it again using this formula."
+            )
+
+        st.markdown("#### 📐 Correct Solution")
+        st.latex(r"V = a^3 = 5^3 = 125\text{ cm}^3")
+
 # AI PROMPTS
 
 with tab2:
