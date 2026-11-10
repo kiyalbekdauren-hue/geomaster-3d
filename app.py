@@ -329,10 +329,25 @@ elif st.session_state.screen=='quiz':
                     st.session_state.answers[pos]=chosen;st.rerun()
             if st.button('Skip this question',use_container_width=True):go_to_next()
         else:
-            if st.session_state.mode=='Check immediately':
-                if saved==q['answer']:st.success('Correct! Well done. Your answer has been recorded.')
-                else:st.warning('Not quite. Your answer has been recorded. Review the correct solution at the end.')
-            else:st.info('Answer saved. You will see the correct answer in the results.')
+            
+            if st.session_state.mode == "Check immediately":
+                if saved == q["answer"]:
+                    st.success("✅ Correct! Excellent work!")
+                else:
+                    st.error("❌ Incorrect answer.")
+                    st.write("**Your answer:**", saved)
+                    st.write("**Correct answer:**", q["answer"])
+                    st.warning("💡 Study tip: " + q["wrong"])
+
+                st.info("📘 Explanation: " + q["explanation"])
+
+            else:
+                st.info(
+                    "✅ Answer saved! "
+                    "Your answer will be checked after "
+                    "you complete all 10 questions."
+                )
+
             if st.button('See results →' if pos==9 else 'Next question →',type='primary',use_container_width=True):go_to_next()
     st.caption('All answers and full explanations become available after finishing the quiz.')
 
