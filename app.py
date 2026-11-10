@@ -288,6 +288,9 @@ if st.session_state.screen=='welcome':
         st.info('Each session has exactly 10 questions, ordered Easy → Medium → Hard. Tap a 3D model and drag to rotate it.')
     with b:
         if st.button('Start the quiz  →',type='primary',use_container_width=True):
+            
+            st.session_state.feedback_mode = st.session_state.mode
+
             st.session_state.started=time.time();st.session_state.ended=None
             st.session_state.cursor=0;st.session_state.answers={};st.session_state.hint_counts={}
             for k in list(st.session_state.keys()):
@@ -330,7 +333,9 @@ elif st.session_state.screen=='quiz':
             if st.button('Skip this question',use_container_width=True):go_to_next()
         else:
             
-            if st.session_state.mode == "Check immediately":
+            
+            if st.session_state.feedback_mode == "Check immediately":
+
                 if saved == q["answer"]:
                     st.success("✅ Correct! Excellent work!")
                 else:
